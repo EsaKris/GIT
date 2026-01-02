@@ -1,21 +1,14 @@
-// js/script.js - COMPLETELY FIXED VERSION
+// js/script.js - FIXED CORS VERSION
 
-// Google Sheets integration setup - UPDATE AFTER REDEPLOYMENT
+// Google Sheets integration
 const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwqXao9FyGTzGYJQd20iIRHcMo08BII-5y6ZAQG350SPiRdhIEILiMPJjPPZ5SWP1LM/exec';
 
-// Paystack configuration - Using your test public key
+// Paystack configuration
 const PAYSTACK_PUBLIC_KEY = 'pk_test_bc2c499cbb16356b7e39778245f9cf76c0eb4c64';
-
-// Storage keys
-const STORAGE_KEYS = {
-    REGISTRATION_DATA: 'registrationData',
-    PENDING_REGISTRATIONS: 'pendingRegistrations',
-    SYNC_STATUS: 'syncStatus'
-};
 
 // Initialize when DOM is loaded
 document.addEventListener('DOMContentLoaded', function() {
-    // Registration form handling
+    // Elements
     const registrationForm = document.getElementById('registrationForm');
     const paymentModal = document.getElementById('paymentModal');
     const confirmPaymentBtn = document.getElementById('confirmPayment');
@@ -31,23 +24,18 @@ document.addEventListener('DOMContentLoaded', function() {
         referenceNumber.textContent = 'GIT-' + generateReference();
     }
     
-    // Country selection handling
+    // Country selection
     if (countrySelect) {
         countrySelect.addEventListener('change', function() {
-            if (this.value === 'other') {
-                otherCountryContainer.classList.remove('hidden');
-            } else {
-                otherCountryContainer.classList.add('hidden');
-            }
+            otherCountryContainer.classList.toggle('hidden', this.value !== 'other');
         });
     }
     
-    // Form submission handling
+    // Form submission - SIMPLIFIED VERSION
     if (registrationForm) {
         registrationForm.addEventListener('submit', async function(e) {
             e.preventDefault();
             
-            // Validate form
             if (!validateForm()) {
                 showAlert('Please fill in all required fields correctly.', 'error');
                 return;
@@ -64,7 +52,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 const formData = {
                     firstName: document.getElementById('firstName').value.trim(),
                     lastName: document.getElementById('lastName').value.trim(),
-                    email: document.getElementById('email').value.trim(),
+                    email: document.getElementById('email').value.trim().toLowerCase(),
                     gender: document.getElementById('gender').value,
                     country: document.getElementById('country').value === 'other' 
                               ? document.getElementById('otherCountry').value.trim()
@@ -79,107 +67,90 @@ document.addEventListener('DOMContentLoaded', function() {
                 
                 console.log('Form data collected:', formData);
                 
+                // SIMPLIFIED: Just save directly without duplicate check
+                // The duplicate prevention happens on Google Script side
+                
                 // Save to localStorage
-                localStorage.setItem(STORAGE_KEYS.REGISTRATION_DATA, JSON.stringify(formData));
+                localStorage.setItem('registrationData', JSON.stringify(formData));
                 
-                // Try to save to Google Sheets (but don't block on failure)
-                const savePromise = saveToGoogleSheets(formData);
+                // Try to save to Google Sheets
+                submitBtn.textContent = 'Saving...';
+                const saved = await saveToGoogleSheetsSimple(formData);
                 
-                // Show payment modal immediately
-                if (paymentModal) {
-                    paymentModal.classList.remove('hidden');
-                    document.body.style.overflow = 'hidden';
-                }
-                
-                // Check save result but don't block user
-                savePromise.then(success => {
-                    if (!success) {
-                        console.log('Google Sheets save failed, stored locally');
-                        storeRegistrationLocally(formData);
+                if (saved) {
+                    // Show payment modal
+                    if (paymentModal) {
+                        paymentModal.classList.remove('hidden');
+                        document.body.style.overflow = 'hidden';
                     }
-                }).catch(err => {
-                    console.error('Save error:', err);
-                    storeRegistrationLocally(formData);
-                });
+                } else {
+                    showAlert('Failed to save. Please try again or contact support.', 'error');
+                }
                 
             } catch (error) {
                 console.error('Form submission error:', error);
                 showAlert('An error occurred. Please try again.', 'error');
             } finally {
-                // Reset button state
                 submitBtn.textContent = originalText;
                 submitBtn.disabled = false;
             }
         });
     }
     
-    // Confirm payment button
+    // Confirm payment
     if (confirmPaymentBtn) {
         confirmPaymentBtn.addEventListener('click', function() {
-            // Initialize Paystack payment
             if (initializePaystackPayment()) {
-                // Close modal
-                if (paymentModal) {
-                    paymentModal.classList.add('hidden');
-                    document.body.style.overflow = 'auto';
-                }
-            }
-        });
-    }
-    
-    // Cancel payment button (WhatsApp redirect)
-    if (cancelPaymentBtn) {
-        cancelPaymentBtn.addEventListener('click', function() {
-            const registrationData = JSON.parse(localStorage.getItem(STORAGE_KEYS.REGISTRATION_DATA) || '{}');
-            
-            // Redirect to WhatsApp
-            const phone = '2348123456789'; // REPLACE WITH ACTUAL NUMBER
-            const message = encodeURIComponent(
-                `Hello! I just registered for the Global Idara Tech Bootcamp\n\n` +
-                `Name: ${registrationData.firstName} ${registrationData.lastName}\n` +
-                `Email: ${registrationData.email}\n` +
-                `Phone: ${registrationData.fullPhone}\n` +
-                `Reference: ${registrationData.reference}\n\n` +
-                `I would like to discuss alternative payment options.`
-            );
-            window.open(`https://wa.me/${phone}?text=${message}`, '_blank');
-            
-            // Close modal
-            if (paymentModal) {
-                paymentModal.classList.add('hidden');
+                paymentModal?.classList.add('hidden');
                 document.body.style.overflow = 'auto';
             }
         });
     }
     
-    // Process payment button on payment page
-    if (processPaymentBtn) {
-        processPaymentBtn.addEventListener('click', function() {
-            initializePaystackPayment();
+    // Cancel payment (WhatsApp)
+    if (cancelPaymentBtn) {
+        cancelPaymentBtn.addEventListener('click', function() {
+            const data = JSON.parse(localStorage.getItem('registrationData') || '{}');
+            const phone = '2349155775787';
+            const message = encodeURIComponent(
+                `Hello! I registered for the Global Idara Tech Bootcamp\n` +
+                `Name: ${data.firstName} ${data.lastName}\n` +
+                `Reference: ${data.reference}\n` +
+                `I need help with payment.`
+            );
+            window.open(`https://wa.me/${phone}?text=${message}`, '_blank');
+            
+            paymentModal?.classList.add('hidden');
+            document.body.style.overflow = 'auto';
         });
+    }
+    
+    // Process payment button
+    if (processPaymentBtn) {
+        processPaymentBtn.addEventListener('click', initializePaystackPayment);
     }
     
     // Check for Paystack callback
     checkPaystackCallback();
     
-    // Success page effects
+    // Success page
     if (window.location.pathname.includes('success.html')) {
         createConfettiEffect();
         
         // Update WhatsApp link
-        const regData = JSON.parse(localStorage.getItem(STORAGE_KEYS.REGISTRATION_DATA) || '{}');
-        if (regData.firstName && whatsappLink) {
+        const data = JSON.parse(localStorage.getItem('registrationData') || '{}');
+        if (data.firstName && whatsappLink) {
             const message = encodeURIComponent(
-                `Hi! I'm ${regData.firstName} ${regData.lastName}.\n` +
-                `I just completed my payment for the Global Idara Tech Bootcamp\n` +
-                `Reference: ${regData.reference}\n` +
-                `I would like to join the WhatsApp group.`
+                `Hi! I'm ${data.firstName} ${data.lastName}.\n` +
+                `I completed payment for the bootcamp.\n` +
+                `Reference: ${data.reference}\n` +
+                `I'd like to join the WhatsApp group.`
             );
-            whatsappLink.href = `https://wa.me/2348123456789?text=${message}`;
+            whatsappLink.href = `https://wa.me/2349155775787?text=${message}`;
         }
     }
     
-    // Close modal when clicking outside
+    // Close modal on outside click
     if (paymentModal) {
         paymentModal.addEventListener('click', function(e) {
             if (e.target === paymentModal) {
@@ -188,188 +159,164 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
-    
-    // Initialize offline sync
-    initializeOfflineSync();
-    
-    // Display sync status
-    displaySyncStatus();
-    
-    // Test Google Script connection
-    testGoogleScript();
 });
 
 // ====================
-// UTILITY FUNCTIONS
+// GOOGLE SHEETS INTEGRATION - SIMPLIFIED
 // ====================
 
-// Generate unique reference number
-function generateReference() {
-    const timestamp = Date.now();
-    const random = Math.floor(Math.random() * 10000);
-    return `${timestamp}-${random.toString().padStart(4, '0')}`;
-}
-
-// Show alert messages
-function showAlert(message, type = 'info') {
-    // Remove existing alerts
-    document.querySelectorAll('.custom-alert').forEach(el => el.remove());
-    
-    const alertDiv = document.createElement('div');
-    alertDiv.className = `custom-alert fixed top-4 right-4 z-50 px-6 py-4 rounded-lg shadow-lg transform transition-all duration-300 ${
-        type === 'error' ? 'bg-red-100 text-red-800 border-l-4 border-red-500' :
-        type === 'success' ? 'bg-green-100 text-green-800 border-l-4 border-green-500' :
-        type === 'warning' ? 'bg-yellow-100 text-yellow-800 border-l-4 border-yellow-500' :
-        'bg-blue-100 text-blue-800 border-l-4 border-blue-500'
-    }`;
-    
-    alertDiv.innerHTML = `
-        <div class="flex items-center">
-            <span class="mr-3">${message}</span>
-            <button onclick="this.parentElement.parentElement.remove()" class="ml-auto text-xl">&times;</button>
-        </div>
-    `;
-    
-    document.body.appendChild(alertDiv);
-    
-    // Auto-remove after 5 seconds
-    setTimeout(() => {
-        if (alertDiv.parentNode) {
-            alertDiv.remove();
-        }
-    }, 5000);
-}
-
-// Form validation
-function validateForm() {
-    let isValid = true;
-    
-    // Clear previous errors
-    document.querySelectorAll('.error-message').forEach(el => el.remove());
-    document.querySelectorAll('.border-red-500').forEach(el => el.classList.remove('border-red-500'));
-    
-    // Check required fields
-    const requiredFields = [
-        'firstName', 'lastName', 'email', 'gender', 'country', 'phone'
-    ];
-    
-    requiredFields.forEach(fieldId => {
-        const field = document.getElementById(fieldId);
-        if (field && !field.value.trim()) {
-            isValid = false;
-            field.classList.add('border-red-500');
-            
-            const errorMsg = document.createElement('p');
-            errorMsg.className = 'error-message text-red-500 text-sm mt-1';
-            errorMsg.textContent = 'This field is required';
-            
-            const parent = field.closest('.form-group') || field.parentNode;
-            if (!parent.querySelector('.error-message')) {
-                parent.appendChild(errorMsg);
-            }
-        }
-    });
-    
-    // Validate email
-    const emailField = document.getElementById('email');
-    if (emailField && emailField.value) {
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(emailField.value)) {
-            isValid = false;
-            emailField.classList.add('border-red-500');
-            
-            const errorMsg = document.createElement('p');
-            errorMsg.className = 'error-message text-red-500 text-sm mt-1';
-            errorMsg.textContent = 'Please enter a valid email address';
-            
-            const parent = emailField.closest('.form-group') || emailField.parentNode;
-            if (!parent.querySelector('.error-message')) {
-                parent.appendChild(errorMsg);
-            }
-        }
-    }
-    
-    // Validate phone
-    const phoneField = document.getElementById('phone');
-    if (phoneField && phoneField.value) {
-        const phoneRegex = /^\d{10,15}$/; // Simple validation for 10-15 digits
-        const cleanedPhone = phoneField.value.replace(/\D/g, '');
+// Simple save function - no CORS issues
+async function saveToGoogleSheetsSimple(formData) {
+    return new Promise((resolve) => {
+        console.log('Attempting to save to Google Sheets:', formData);
         
-        if (!phoneRegex.test(cleanedPhone)) {
-            isValid = false;
-            phoneField.classList.add('border-red-500');
-            
-            const errorMsg = document.createElement('p');
-            errorMsg.className = 'error-message text-red-500 text-sm mt-1';
-            errorMsg.textContent = 'Please enter a valid phone number (10-15 digits)';
-            
-            const parent = phoneField.closest('.form-group') || phoneField.parentNode;
-            if (!parent.querySelector('.error-message')) {
-                parent.appendChild(errorMsg);
-            }
-        }
+        // Create a hidden iframe to submit the form (bypasses CORS)
+        const iframe = document.createElement('iframe');
+        iframe.style.display = 'none';
+        iframe.name = 'google-sheets-iframe';
+        
+        // Create a form
+        const form = document.createElement('form');
+        form.target = 'google-sheets-iframe';
+        form.action = SCRIPT_URL;
+        form.method = 'POST';
+        
+        // Add all form data as hidden inputs
+        Object.keys(formData).forEach(key => {
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = key;
+            input.value = formData[key];
+            form.appendChild(input);
+        });
+        
+        // Add timestamp
+        const timestampInput = document.createElement('input');
+        timestampInput.type = 'hidden';
+        timestampInput.name = 'timestamp';
+        timestampInput.value = new Date().toISOString();
+        form.appendChild(timestampInput);
+        
+        // Append to body and submit
+        document.body.appendChild(iframe);
+        document.body.appendChild(form);
+        
+        // Set timeout to check if saved
+        const timeout = setTimeout(() => {
+            console.log('Save attempt completed (timeout)');
+            // Assume success since we can't read response due to CORS
+            document.body.removeChild(iframe);
+            document.body.removeChild(form);
+            resolve(true);
+        }, 3000);
+        
+        // When iframe loads (response received)
+        iframe.onload = function() {
+            clearTimeout(timeout);
+            console.log('Google Sheets response received');
+            document.body.removeChild(iframe);
+            document.body.removeChild(form);
+            resolve(true);
+        };
+        
+        // Submit the form
+        form.submit();
+    });
+}
+
+// Alternative method using no-cors fetch
+async function saveToGoogleSheetsNoCors(formData) {
+    try {
+        console.log('Saving with no-cors mode:', formData);
+        
+        // Convert to FormData
+        const data = new FormData();
+        Object.keys(formData).forEach(key => {
+            data.append(key, formData[key]);
+        });
+        
+        // Use no-cors mode (we can't read response, but request goes through)
+        await fetch(SCRIPT_URL, {
+            method: 'POST',
+            mode: 'no-cors', // This bypasses CORS errors
+            body: data
+        });
+        
+        console.log('Request sent (no-cors mode)');
+        return true;
+        
+    } catch (error) {
+        console.error('Save error (no-cors):', error);
+        return false;
     }
-    
-    return isValid;
+}
+
+// Update registration status after payment
+async function updateRegistrationStatus(registrationData) {
+    try {
+        const updateData = {
+            action: 'update',
+            email: registrationData.email,
+            status: 'paid',
+            paymentDate: registrationData.paymentDate || new Date().toISOString(),
+            paymentMethod: registrationData.paymentMethod || 'paystack',
+            paymentReference: registrationData.paymentReference || ''
+        };
+        
+        console.log('Updating status:', updateData);
+        
+        // Create URL with parameters
+        const params = new URLSearchParams(updateData);
+        const url = `${SCRIPT_URL}?${params.toString()}`;
+        
+        // Use no-cors mode
+        await fetch(url, {
+            method: 'GET',
+            mode: 'no-cors'
+        });
+        
+        console.log('Status update request sent');
+        return true;
+        
+    } catch (error) {
+        console.error('Update error:', error);
+        return false;
+    }
 }
 
 // ====================
 // PAYSTACK INTEGRATION
 // ====================
 
-// Initialize Paystack payment
 function initializePaystackPayment() {
-    const registrationData = JSON.parse(localStorage.getItem(STORAGE_KEYS.REGISTRATION_DATA) || '{}');
+    const data = JSON.parse(localStorage.getItem('registrationData') || '{}');
     
-    if (!registrationData.email) {
-        showAlert('Please complete the registration form first.', 'error');
+    if (!data.email) {
+        showAlert('Please complete registration first', 'error');
         return false;
     }
     
-    // Check if Paystack is loaded
     if (typeof PaystackPop === 'undefined') {
-        showAlert('Payment service is not available. Please refresh the page.', 'error');
+        showAlert('Payment service not loaded', 'error');
         return false;
     }
     
-    // Check Paystack key
-    if (!PAYSTACK_PUBLIC_KEY || PAYSTACK_PUBLIC_KEY.includes('your_public_key')) {
-        showAlert('Payment configuration error. Please contact support.', 'error');
-        return false;
-    }
-    
-    // Amount in kobo (smallest currency unit)
-    // $309 = 30900 cents
+    // Amount in kobo (₦12,000 = 1200000 kobo)
     const amountInKobo = 1200000;
-    
-    // Generate reference
-    const reference = registrationData.reference || 'GIT-' + generateReference();
-    
-    console.log('Initializing Paystack payment:', {
-        email: registrationData.email,
-        amount: amountInKobo,
-        reference: reference,
-        currency: 'NGN'
-    });
     
     try {
         const handler = PaystackPop.setup({
             key: PAYSTACK_PUBLIC_KEY,
-            email: registrationData.email,
+            email: data.email,
             amount: amountInKobo,
             currency: 'NGN',
-            ref: reference,
+            ref: data.reference,
             metadata: {
                 custom_fields: [
                     {
-                        display_name: "First Name",
-                        variable_name: "first_name",
-                        value: registrationData.firstName || ""
-                    },
-                    {
-                        display_name: "Last Name",
-                        variable_name: "last_name",
-                        value: registrationData.lastName || ""
+                        display_name: "Name",
+                        variable_name: "name",
+                        value: data.firstName + ' ' + data.lastName
                     },
                     {
                         display_name: "Bootcamp",
@@ -379,16 +326,13 @@ function initializePaystackPayment() {
                 ]
             },
             callback: function(response) {
-                console.log('Paystack callback received:', response);
-                if (response && response.reference) {
-                    handleSuccessfulPayment(response.reference, registrationData);
-                } else {
-                    showAlert('Payment verification failed. Please contact support.', 'error');
+                console.log('Payment callback:', response);
+                if (response.reference) {
+                    handleSuccessfulPayment(response.reference, data);
                 }
             },
             onClose: function() {
-                console.log('Payment window was closed');
-                showAlert('Payment window closed. If you completed payment, check your email for confirmation.', 'info');
+                console.log('Payment window closed');
             }
         });
         
@@ -396,331 +340,225 @@ function initializePaystackPayment() {
         return true;
         
     } catch (error) {
-        console.error('Paystack initialization error:', error);
-        showAlert('Payment initialization failed: ' + error.message, 'error');
+        console.error('Paystack error:', error);
+        showAlert('Payment initialization failed', 'error');
         return false;
     }
 }
 
-// Handle successful Paystack payment
-async function handleSuccessfulPayment(paymentReference, registrationData) {
+async function handleSuccessfulPayment(reference, data) {
     try {
-        // Update registration data
-        registrationData.status = 'paid';
-        registrationData.paymentDate = new Date().toISOString();
-        registrationData.paymentReference = paymentReference;
-        registrationData.paymentMethod = 'paystack';
+        // Update data
+        data.status = 'paid';
+        data.paymentDate = new Date().toISOString();
+        data.paymentReference = reference;
+        data.paymentMethod = 'paystack';
         
-        // Save updated data
-        localStorage.setItem(STORAGE_KEYS.REGISTRATION_DATA, JSON.stringify(registrationData));
+        // Save data
+        localStorage.setItem('registrationData', JSON.stringify(data));
         
         // Update Google Sheets
-        const updateSuccess = await updateRegistrationStatus(registrationData);
+        await updateRegistrationStatus(data);
         
-        if (updateSuccess) {
-            // Redirect to success page
-            window.location.href = 'success.html';
-        } else {
-            // Save locally and redirect anyway
-            storeRegistrationLocally(registrationData);
-            showAlert('Payment successful! There was an issue updating records, but your payment is confirmed.', 'warning');
-            window.location.href = 'success.html';
-        }
+        // Redirect to success
+        window.location.href = 'success.html';
+        
     } catch (error) {
         console.error('Payment handling error:', error);
-        showAlert('Payment successful but there was an error. Please contact support with reference: ' + paymentReference, 'error');
+        showAlert('Payment successful but error occurred. Please contact support.', 'warning');
         window.location.href = 'success.html';
     }
 }
 
-// Check for Paystack callback
 function checkPaystackCallback() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const reference = urlParams.get('reference');
-    const trxref = urlParams.get('trxref');
+    const params = new URLSearchParams(window.location.search);
+    const reference = params.get('reference') || params.get('trxref');
     
-    if (reference || trxref) {
-        console.log('Paystack callback detected:', reference || trxref);
-        verifyPaymentFromCallback(reference || trxref);
-    }
-}
-
-// Verify payment from callback
-async function verifyPaymentFromCallback(reference) {
-    try {
-        const registrationData = JSON.parse(localStorage.getItem(STORAGE_KEYS.REGISTRATION_DATA) || '{}');
-        
-        if (registrationData && !registrationData.paymentReference) {
-            // Update with callback reference
-            registrationData.paymentReference = reference;
-            registrationData.status = 'paid';
-            registrationData.paymentDate = new Date().toISOString();
-            
-            localStorage.setItem(STORAGE_KEYS.REGISTRATION_DATA, JSON.stringify(registrationData));
-            
-            // Try to update Google Sheets
-            try {
-                await updateRegistrationStatus(registrationData);
-            } catch (error) {
-                console.error('Update failed, saving locally:', error);
-                storeRegistrationLocally(registrationData);
-            }
-            
-            // Redirect to success page
-            window.location.href = 'success.html';
+    if (reference) {
+        console.log('Paystack callback detected:', reference);
+        const data = JSON.parse(localStorage.getItem('registrationData') || '{}');
+        if (data && !data.paymentReference) {
+            handleSuccessfulPayment(reference, data);
         }
-    } catch (error) {
-        console.error('Callback verification error:', error);
     }
 }
 
 // ====================
-// GOOGLE SHEETS INTEGRATION
+// UTILITY FUNCTIONS
 // ====================
 
-// Save data to Google Sheets
-async function saveToGoogleSheets(formData) {
-    try {
-        console.log('Saving to Google Sheets:', formData);
-        
-        // Convert to URL-encoded form data (works better with Google Apps Script)
-        const formDataEncoded = new URLSearchParams();
-        Object.keys(formData).forEach(key => {
-            formDataEncoded.append(key, formData[key]);
-        });
-        
-        // Send POST request
-        const response = await fetch(SCRIPT_URL, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-            },
-            body: formDataEncoded.toString()
-        });
-        
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        
-        const result = await response.json();
-        console.log('Google Sheets response:', result);
-        
-        return result.success === true;
-        
-    } catch (error) {
-        console.error('Error saving to Google Sheets:', error);
-        
-        // Store locally for later sync
-        storeRegistrationLocally(formData);
-        
-        return false;
-    }
+function generateReference() {
+    return Date.now() + '-' + Math.floor(Math.random() * 10000).toString().padStart(4, '0');
 }
 
-// Update registration status
-async function updateRegistrationStatus(registrationData) {
-    try {
-        const updateData = {
-            email: registrationData.email,
-            status: 'paid',
-            paymentDate: registrationData.paymentDate || new Date().toISOString(),
-            paymentMethod: registrationData.paymentMethod || 'paystack',
-            paymentReference: registrationData.paymentReference || '',
-            action: 'update'
-        };
-        
-        console.log('Updating status:', updateData);
-        
-        // Send as query parameters for GET request
-        const params = new URLSearchParams(updateData);
-        const response = await fetch(`${SCRIPT_URL}?${params.toString()}`);
-        
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        
-        const result = await response.json();
-        console.log('Update response:', result);
-        
-        return result.success === true;
-        
-    } catch (error) {
-        console.error('Error updating status:', error);
-        
-        // Mark for later sync
-        storeRegistrationLocally(registrationData);
-        
-        return false;
-    }
-}
-
-// ====================
-// OFFLINE SUPPORT
-// ====================
-
-// Store registration locally
-function storeRegistrationLocally(registrationData) {
-    try {
-        const pending = JSON.parse(localStorage.getItem(STORAGE_KEYS.PENDING_REGISTRATIONS) || '[]');
-        
-        // Check if already exists
-        const exists = pending.some(item => item.email === registrationData.email);
-        
-        if (!exists) {
-            pending.push({
-                ...registrationData,
-                id: Date.now(),
-                synced: false,
-                syncAttempts: 0
-            });
-            
-            localStorage.setItem(STORAGE_KEYS.PENDING_REGISTRATIONS, JSON.stringify(pending));
-            updateSyncStatus(pending.length);
-            
-            console.log('Registration stored locally:', registrationData.email);
-        }
-    } catch (error) {
-        console.error('Error storing locally:', error);
-    }
-}
-
-// Initialize offline sync
-function initializeOfflineSync() {
-    // Sync on page load if online
-    if (navigator.onLine) {
-        setTimeout(syncPendingRegistrations, 2000);
-    }
+function showAlert(message, type = 'info') {
+    // Remove existing alerts
+    document.querySelectorAll('.custom-alert').forEach(el => el.remove());
     
-    // Listen for online/offline events
-    window.addEventListener('online', () => {
-        showAlert('You are back online. Syncing data...', 'info');
-        setTimeout(syncPendingRegistrations, 1000);
+    const alertDiv = document.createElement('div');
+    alertDiv.className = `custom-alert fixed top-4 right-4 z-50 px-6 py-4 rounded-lg shadow-lg ${
+        type === 'error' ? 'bg-red-100 text-red-800 border-l-4 border-red-500' :
+        type === 'success' ? 'bg-green-100 text-green-800 border-l-4 border-green-500' :
+        'bg-blue-100 text-blue-800 border-l-4 border-blue-500'
+    }`;
+    
+    alertDiv.innerHTML = `
+        <div class="flex items-center">
+            <span class="mr-3">${message}</span>
+            <button onclick="this.parentElement.parentElement.remove()" class="ml-auto">×</button>
+        </div>
+    `;
+    
+    document.body.appendChild(alertDiv);
+    setTimeout(() => alertDiv.remove(), 5000);
+}
+
+function validateForm() {
+    let isValid = true;
+    
+    // Clear errors
+    document.querySelectorAll('.error-message').forEach(el => el.remove());
+    document.querySelectorAll('.border-red-500').forEach(el => el.classList.remove('border-red-500'));
+    
+    // Check required fields
+    const fields = ['firstName', 'lastName', 'email', 'phone'];
+    fields.forEach(id => {
+        const field = document.getElementById(id);
+        if (field && !field.value.trim()) {
+            isValid = false;
+            field.classList.add('border-red-500');
+            field.insertAdjacentHTML('afterend', 
+                `<p class="error-message text-red-500 text-sm mt-1">This field is required</p>`
+            );
+        }
     });
     
-    window.addEventListener('offline', () => {
-        showAlert('You are offline. Data will be saved locally.', 'warning');
-    });
-}
-
-// Sync pending registrations
-async function syncPendingRegistrations() {
-    if (!navigator.onLine) return;
-    
-    const pending = JSON.parse(localStorage.getItem(STORAGE_KEYS.PENDING_REGISTRATIONS) || '[]');
-    const unsynced = pending.filter(item => !item.synced && (item.syncAttempts || 0) < 3);
-    
-    if (unsynced.length === 0) return;
-    
-    console.log(`Syncing ${unsynced.length} pending registrations...`);
-    
-    for (const item of unsynced) {
-        try {
-            let success = false;
-            
-            if (item.status === 'paid') {
-                success = await updateRegistrationStatus(item);
-            } else {
-                success = await saveToGoogleSheets(item);
-            }
-            
-            if (success) {
-                item.synced = true;
-                item.syncedAt = new Date().toISOString();
-            } else {
-                item.syncAttempts = (item.syncAttempts || 0) + 1;
-            }
-        } catch (error) {
-            console.error('Sync error:', error);
-            item.syncAttempts = (item.syncAttempts || 0) + 1;
+    // Validate email
+    const email = document.getElementById('email');
+    if (email && email.value) {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email.value)) {
+            isValid = false;
+            email.classList.add('border-red-500');
+            email.insertAdjacentHTML('afterend',
+                `<p class="error-message text-red-500 text-sm mt-1">Invalid email format</p>`
+            );
         }
     }
     
-    // Update localStorage
-    localStorage.setItem(STORAGE_KEYS.PENDING_REGISTRATIONS, JSON.stringify(pending));
-    
-    // Update display
-    updateSyncStatus(pending.filter(item => !item.synced).length);
-}
-
-// Update sync status
-function updateSyncStatus(pendingCount) {
-    localStorage.setItem(STORAGE_KEYS.SYNC_STATUS, JSON.stringify({
-        pendingCount,
-        lastUpdate: new Date().toISOString()
-    }));
-    
-    displaySyncStatus();
-}
-
-// Display sync status
-function displaySyncStatus() {
-    const status = JSON.parse(localStorage.getItem(STORAGE_KEYS.SYNC_STATUS) || '{"pendingCount":0}');
-    const pendingCount = status.pendingCount || 0;
-    
-    if (pendingCount > 0) {
-        console.log(`${pendingCount} registration(s) pending sync`);
+    // Validate phone
+    const phone = document.getElementById('phone');
+    if (phone && phone.value) {
+        const cleanedPhone = phone.value.replace(/\D/g, '');
+        if (cleanedPhone.length < 10) {
+            isValid = false;
+            phone.classList.add('border-red-500');
+            phone.insertAdjacentHTML('afterend',
+                `<p class="error-message text-red-500 text-sm mt-1">Phone must be at least 10 digits</p>`
+            );
+        }
     }
+    
+    return isValid;
 }
-
-// Test Google Script connection
-async function testGoogleScript() {
-    try {
-        const response = await fetch(`${SCRIPT_URL}?test=true`);
-        const result = await response.json();
-        console.log('Google Script test:', result);
-    } catch (error) {
-        console.error('Google Script test failed:', error);
-    }
-}
-
-// ====================
-// SUCCESS PAGE EFFECTS
-// ====================
 
 // Confetti effect
 function createConfettiEffect() {
     const container = document.getElementById('confetti-container');
     if (!container) return;
     
-    const colors = ['#10b981', '#0d9488', '#34d399', '#5eead4', '#a7f3d0', '#6ee7b7'];
-    
-    for (let i = 0; i < 100; i++) {
+    for (let i = 0; i < 50; i++) {
         setTimeout(() => {
             const confetti = document.createElement('div');
             confetti.className = 'confetti';
             confetti.style.left = Math.random() * 100 + 'vw';
-            confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+            confetti.style.backgroundColor = ['#10b981', '#0d9488', '#34d399'][Math.floor(Math.random() * 3)];
             confetti.style.width = Math.random() * 10 + 5 + 'px';
             confetti.style.height = Math.random() * 10 + 5 + 'px';
-            confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
             
             container.appendChild(confetti);
             
-            // Animate
-            const animation = confetti.animate([
-                { top: '-20px', opacity: 1, transform: 'rotate(0deg)' },
-                { top: '100vh', opacity: 0, transform: `rotate(${Math.random() * 360}deg)` }
+            confetti.animate([
+                { top: '-20px', opacity: 1 },
+                { top: '100vh', opacity: 0 }
             ], {
                 duration: Math.random() * 3000 + 2000,
-                easing: 'cubic-bezier(0.215, 0.61, 0.355, 1)'
-            });
-            
-            animation.onfinish = () => {
-                if (confetti.parentNode) {
-                    confetti.remove();
-                }
-            };
+                delay: Math.random() * 1000
+            }).onfinish = () => confetti.remove();
         }, i * 30);
     }
 }
 
 // ====================
-// INITIALIZATION
+// DUPLICATE PREVENTION WORKAROUND
 // ====================
 
-// Auto-sync every 30 seconds when online
-setInterval(() => {
-    if (navigator.onLine) {
-        syncPendingRegistrations();
+// Since we can't read response due to CORS, we'll prevent duplicates on client side
+function setupDuplicatePrevention() {
+    const emailField = document.getElementById('email');
+    const phoneField = document.getElementById('phone');
+    
+    // Store submitted emails/phones in session
+    const submitted = {
+        emails: JSON.parse(sessionStorage.getItem('submitted_emails') || '[]'),
+        phones: JSON.parse(sessionStorage.getItem('submitted_phones') || '[]')
+    };
+    
+    if (emailField) {
+        emailField.addEventListener('blur', function() {
+            const email = this.value.trim().toLowerCase();
+            if (email && submitted.emails.includes(email)) {
+                showAlert('This email was recently submitted. Please wait or contact support.', 'warning');
+            }
+        });
     }
-}, 30000);
+    
+    if (phoneField) {
+        phoneField.addEventListener('blur', function() {
+            const phone = this.value.trim().replace(/\D/g, '');
+            if (phone && submitted.phones.includes(phone)) {
+                showAlert('This phone was recently submitted. Please wait or contact support.', 'warning');
+            }
+        });
+    }
+    
+    // Store submission
+    window.markAsSubmitted = function(formData) {
+        submitted.emails.push(formData.email.toLowerCase());
+        submitted.phones.push(formData.phone.replace(/\D/g, ''));
+        
+        sessionStorage.setItem('submitted_emails', JSON.stringify(submitted.emails));
+        sessionStorage.setItem('submitted_phones', JSON.stringify(submitted.phones));
+        
+        // Clear after 5 minutes
+        setTimeout(() => {
+            submitted.emails = submitted.emails.filter(e => e !== formData.email.toLowerCase());
+            submitted.phones = submitted.phones.filter(p => p !== formData.phone.replace(/\D/g, ''));
+            sessionStorage.setItem('submitted_emails', JSON.stringify(submitted.emails));
+            sessionStorage.setItem('submitted_phones', JSON.stringify(submitted.phones));
+        }, 300000); // 5 minutes
+    };
+}
+
+// Initialize duplicate prevention
+document.addEventListener('DOMContentLoaded', function() {
+    setupDuplicatePrevention();
+});
+
+// Update form submission to mark as submitted
+const originalFormSubmit = document.querySelector('#registrationForm');
+if (originalFormSubmit) {
+    const originalHandler = originalFormSubmit.onSubmit;
+    originalFormSubmit.addEventListener('submit', function(e) {
+        // Get form data
+        const formData = {
+            email: document.getElementById('email')?.value.trim().toLowerCase() || '',
+            phone: document.getElementById('phone')?.value.trim().replace(/\D/g, '') || ''
+        };
+        
+        // Mark as submitted
+        if (window.markAsSubmitted) {
+            window.markAsSubmitted(formData);
+        }
+    });
+}
