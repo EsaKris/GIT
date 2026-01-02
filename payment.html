@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment - Global Idara Tech Bootcamp</title>
+    <meta name="description" content="Complete your payment for Global Idara Tech Bootcamp using Paystack. Secure your spot in West Africa's premier coding bootcamp.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Add Paystack SDK -->
+    <script src="https://js.paystack.co/v1/inline.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+        <!-- Production Tailwind CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    
+    <!-- Paystack -->
+    <script src="https://js.paystack.co/v1/inline.js"></script>
+    <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💻</text></svg>">
+</head>
+<body class="font-poppins bg-gradient-to-br from-emerald-50 via-white to-cyan-50 min-h-screen">
+    <!-- Glass morphism background elements -->
+    <div class="glass-bg-1"></div>
+    <div class="glass-bg-2"></div>
+    <div class="glass-bg-3"></div>
+    
+    <!-- Navigation -->
+    <nav class="sticky top-0 z-50 backdrop-blur-lg bg-white/70 border-b border-emerald-100">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center space-x-2">
+                    <a href="index.html" class="flex items-center space-x-2">
+                        <div class="w-10 h-10 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-400 flex items-center justify-center">
+                            <span class="text-white font-bold text-xl">GIT</span>
+                        </div>
+                        <div>
+                            <h1 class="text-2xl font-bold bg-gradient-to-r from-emerald-700 to-teal-600 bg-clip-text text-transparent">Global Idara Tech</h1>
+                            <p class="text-xs text-emerald-600 font-medium">Bootcamp</p>
+                        </div>
+                    </a>
+                </div>
+                
+                <a href="register.html" class="text-emerald-700 font-medium hover:text-emerald-600 transition-colors">
+                    <i class="fas fa-arrow-left mr-2"></i> Back to Registration
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Payment Section -->
+    <section class="py-12 md:py-16">
+        <div class="container mx-auto px-6">
+            <div class="max-w-2xl mx-auto">
+                <!-- Progress Bar -->
+                <div class="mb-12">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="text-center">
+                            <div class="w-12 h-12 rounded-full bg-emerald-100 text-emerald-700 font-bold flex items-center justify-center mx-auto mb-2">
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <p class="text-sm font-medium text-gray-500">Personal Info</p>
+                        </div>
+                        <div class="h-1 flex-1 mx-4 bg-gradient-to-r from-emerald-500 to-teal-300"></div>
+                        <div class="text-center">
+                            <div class="w-12 h-12 rounded-full bg-gradient-to-r from-emerald-600 to-teal-500 text-white font-bold flex items-center justify-center mx-auto mb-2">
+                                2
+                            </div>
+                            <p class="text-sm font-medium text-emerald-700">Payment</p>
+                        </div>
+                        <div class="h-1 flex-1 mx-4 bg-gray-200"></div>
+                        <div class="text-center">
+                            <div class="w-12 h-12 rounded-full bg-emerald-100 text-emerald-700 font-bold flex items-center justify-center mx-auto mb-2">
+                                3
+                            </div>
+                            <p class="text-sm font-medium text-gray-500">Confirmation</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Payment Header -->
+                <div class="text-center mb-10">
+                    <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Complete Your Payment</h1>
+                    <p class="text-xl text-gray-600">Secure your spot in the Global Idara Tech Bootcamp</p>
+                </div>
+                
+                <!-- Payment Details -->
+                <div class="glass-card p-8 md:p-10 rounded-2xl shadow-lg mb-8">
+                    <div class="mb-8">
+                        <h2 class="text-2xl font-bold text-gray-900 mb-6">Order Summary</h2>
+                        
+                        <div class="space-y-4">
+                            <div class="flex justify-between items-center pb-4 border-b border-emerald-100">
+                                <div>
+                                    <p class="font-medium text-gray-800">Global Idara Tech Bootcamp</p>
+                                    <p class="text-sm text-gray-600">Early Bird Registration</p>
+                                </div>
+                                <span class="text-xl font-bold text-emerald-700">₦30,000</span>
+                            </div>
+                            
+                            <div class="flex justify-between items-center pb-4 border-b border-emerald-100">
+                                <p class="text-gray-700">Discount (Early Bird)</p>
+                                <span class="font-bold text-emerald-600">-₦18,000</span>
+                            </div>
+                            
+                            <div class="flex justify-between items-center pb-4 border-b border-emerald-100">
+                                <p class="text-gray-700">Platform Fee</p>
+                                <span class="text-gray-700">₦00</span>
+                            </div>
+                            
+                            <div class="flex justify-between items-center pt-4">
+                                <p class="text-xl font-bold text-gray-900">Total Amount</p>
+                                <span class="text-2xl font-bold text-emerald-700">₦12,000</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Payment Methods -->
+                    <div class="mb-8">
+                        <h3 class="text-xl font-bold text-gray-900 mb-6">Select Payment Method</h3>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <!-- Pay with Card -->
+                            <div class="relative">
+                                <input type="radio" id="paystack" name="paymentMethod" value="paystack" checked 
+                                       class="sr-only peer">
+                                <label for="paystack" 
+                                       class="flex flex-col items-center justify-center p-6 border-2 border-emerald-200 rounded-xl cursor-pointer hover:border-emerald-400 peer-checked:border-emerald-500 peer-checked:bg-emerald-50 transition-all h-full">
+                                    <div class="w-16 h-10 bg-gradient-to-r from-purple-600 to-blue-500 rounded flex items-center justify-center mb-3">
+                                        <span class="text-white font-bold text-sm">PAYSTACK</span>
+                                    </div>
+                                    <span class="font-medium text-gray-800 text-center">Card & Bank Transfer</span>
+                                    <p class="text-xs text-gray-600 mt-2 text-center">Visa, Mastercard, Verve & Bank</p>
+                                </label>
+                            </div>
+                            
+                            <!-- Bank Transfer -->
+                            <div class="relative">
+                                <input type="radio" id="directTransfer" name="paymentMethod" value="directTransfer" 
+                                       class="sr-only peer">
+                                <label for="directTransfer" 
+                                       class="flex flex-col items-center justify-center p-6 border-2 border-emerald-200 rounded-xl cursor-pointer hover:border-emerald-400 peer-checked:border-emerald-500 peer-checked:bg-emerald-50 transition-all h-full">
+                                    <i class="fas fa-university text-3xl text-emerald-600 mb-3"></i>
+                                    <span class="font-medium text-gray-800 text-center">Direct Transfer</span>
+                                    <p class="text-xs text-gray-600 mt-2 text-center">Manual bank transfer</p>
+                                </label>
+                            </div>
+                            
+                            <!-- USSD -->
+                            <div class="relative">
+                                <input type="radio" id="ussd" name="paymentMethod" value="ussd" 
+                                       class="sr-only peer">
+                                <label for="ussd" 
+                                       class="flex flex-col items-center justify-center p-6 border-2 border-emerald-200 rounded-xl cursor-pointer hover:border-emerald-400 peer-checked:border-emerald-500 peer-checked:bg-emerald-50 transition-all h-full">
+                                    <i class="fas fa-mobile-alt text-3xl text-emerald-600 mb-3"></i>
+                                    <span class="font-medium text-gray-800 text-center">USSD</span>
+                                    <p class="text-xs text-gray-600 mt-2 text-center">*723*...# for Nigerian banks</p>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Payment Instructions -->
+                    <div id="paystackInstructions" class="p-6 bg-emerald-50 rounded-xl border border-emerald-200">
+                        <h4 class="font-bold text-gray-800 mb-4 flex items-center">
+                            <i class="fas fa-shield-alt text-emerald-600 mr-2"></i>
+                            Secure Payment via Paystack
+                        </h4>
+                        <div class="space-y-3 mb-4">
+                            <div class="flex items-start">
+                                <i class="fas fa-check-circle text-emerald-500 mt-1 mr-3"></i>
+                                <span class="text-gray-700">Click "Pay Now" to open secure Paystack payment page</span>
+                            </div>
+                            <div class="flex items-start">
+                                <i class="fas fa-check-circle text-emerald-500 mt-1 mr-3"></i>
+                                <span class="text-gray-700">Pay with card, bank transfer, or USSD</span>
+                            </div>
+                            <div class="flex items-start">
+                                <i class="fas fa-check-circle text-emerald-500 mt-1 mr-3"></i>
+                                <span class="text-gray-700">Instant confirmation and receipt</span>
+                            </div>
+                        </div>
+                        <div class="flex items-center text-sm text-gray-600">
+                            <i class="fas fa-lock mr-2"></i>
+                            <span>PCI DSS compliant • 256-bit encryption</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Bank Transfer Details (Hidden by default) -->
+                    <div id="transferForm" class="hidden p-6 bg-emerald-50 rounded-xl border border-emerald-200">
+                        <h4 class="font-bold text-gray-800 mb-4">Bank Transfer Details</h4>
+                        <div class="space-y-3">
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Bank Name:</span>
+                                <span class="font-medium">Global Trust Bank</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Account Name:</span>
+                                <span class="font-medium">Global Idara Tech Ltd</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Account Number:</span>
+                                <span class="font-medium">0123456789</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Sort Code:</span>
+                                <span class="font-medium">123456</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Reference:</span>
+                                <span class="font-medium text-emerald-700">GIT-<span id="referenceNumber">001234</span></span>
+                            </div>
+                        </div>
+                        <p class="text-sm text-gray-600 mt-4">
+                            Please use the reference number above when making your transfer. 
+                            Your registration will be confirmed once payment is received.
+                        </p>
+                    </div>
+                    
+                    <!-- USSD Instructions (Hidden by default) -->
+                    <!-- <div id="ussdForm" class="hidden p-6 bg-emerald-50 rounded-xl border border-emerald-200">
+                        <h4 class="font-bold text-gray-800 mb-4">USSD Payment Instructions</h4>
+                        <div class="space-y-3">
+                            <div class="flex items-start">
+                                <div class="w-8 h-8 rounded-full bg-emerald-100 flex items-center justify-center mr-3 flex-shrink-0">
+                                    <span class="font-bold text-emerald-700">1</span>
+                                </div>
+                                <span class="text-gray-700">Dial *723*1*<span class="font-bold text-emerald-700">30900</span>#</span>
+                            </div>
+                            <div class="flex items-start">
+                                <div class="w-8 h-8 rounded-full bg-emerald-100 flex items-center justify-center mr-3 flex-shrink-0">
+                                    <span class="font-bold text-emerald-700">2</span>
+                                </div>
+                                <span class="text-gray-700">Select your bank from the list</span>
+                            </div>
+                            <div class="flex items-start">
+                                <div class="w-8 h-8 rounded-full bg-emerald-100 flex items-center justify-center mr-3 flex-shrink-0">
+                                    <span class="font-bold text-emerald-700">3</span>
+                                </div>
+                                <span class="text-gray-700">Enter your ATM PIN to complete payment</span>
+                            </div>
+                        </div>
+                        <p class="text-sm text-gray-600 mt-4">
+                            Amount: ₦12,000. Use reference: <span class="font-medium text-emerald-700">GIT-<span id="ussdReference">001234</span></span>
+                        </p>
+                    </div> -->
+                </div>
+                
+                <!-- Payment Button -->
+                <div class="glass-card p-6 rounded-2xl shadow-lg">
+                    <div class="flex flex-col sm:flex-row items-center justify-between">
+                        <div class="mb-4 sm:mb-0">
+                            <p class="font-bold text-gray-900">Total Amount: <span class="text-2xl text-emerald-700">₦12,000</span></p>
+                            <p class="text-sm text-gray-600">Early bird discount applied</p>
+                        </div>
+                        
+                        <button id="processPayment" 
+                                class="px-8 py-4 bg-gradient-to-r from-emerald-600 to-teal-500 text-white font-semibold rounded-xl hover:shadow-xl hover:shadow-emerald-200 transition-all duration-300 transform hover:-translate-y-0.5">
+                            <i class="fas fa-lock mr-2"></i> Pay Now with Paystack
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Payment Logos -->
+                <div class="flex flex-wrap justify-center gap-6 mt-8">
+                    <div class="flex items-center">
+                        <div class="w-24 h-16 bg-gradient-to-r from-yellow-400 to-orange-500 rounded flex items-center justify-center px-2">
+                            <span class="text-white font-bold text-sm">PAYSTACK</span>
+                        </div>
+                    </div>
+                    <div class="flex items-center text-gray-600">
+                        <i class="fab fa-cc-visa text-3xl text-blue-600 mr-3"></i>
+                        <i class="fab fa-cc-mastercard text-3xl text-red-600 mr-3"></i>
+                        <i class="fas fa-mobile-alt text-2xl text-emerald-600"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gradient-to-r from-emerald-900 to-teal-800 text-white py-12 mt-12">
+        <div class="container mx-auto px-6">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-8 md:mb-0">
+                    <div class="flex items-center space-x-2 mb-4">
+                        <div class="w-10 h-10 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-400 flex items-center justify-center">
+                            <span class="text-white font-bold text-xl">GIT</span>
+                        </div>
+                        <div>
+                            <h1 class="text-2xl font-bold">Global Idara Tech</h1>
+                            <p class="text-emerald-200 text-sm">Bootcamp</p>
+                        </div>
+                    </div>
+                    <p class="text-emerald-100">Secure payment via Paystack</p>
+                </div>
+                
+                <div class="text-center">
+                    <p class="mb-4 text-emerald-100">Payment issues? Contact support</p>
+                    <a href="https://wa.me/2341234567890" target="_blank" 
+                       class="px-6 py-3 bg-white text-emerald-700 font-semibold rounded-xl hover:bg-emerald-50 transition-colors inline-flex items-center">
+                        <i class="fab fa-whatsapp mr-2 text-lg"></i> WhatsApp Support
+                    </a>
+                </div>
+            </div>
+            
+            <div class="border-t border-emerald-700 mt-12 pt-8 text-center text-emerald-200">
+                <p>© 2023 Global Idara Tech Bootcamp. All rights reserved.</p>
+                <p class="mt-2 text-sm">Contact: info@globalidaratech.com | +234 123 456 7890</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/script.js"></script>
+    <script>
+        // Update payment method display
+        document.addEventListener('DOMContentLoaded', function() {
+            const paymentMethods = document.querySelectorAll('input[name="paymentMethod"]');
+            const paystackInstructions = document.getElementById('paystackInstructions');
+            const transferForm = document.getElementById('transferForm');
+            const ussdForm = document.getElementById('ussdForm');
+            
+            paymentMethods.forEach(method => {
+                method.addEventListener('change', function() {
+                    // Hide all instructions
+                    paystackInstructions.classList.add('hidden');
+                    transferForm.classList.add('hidden');
+                    ussdForm.classList.add('hidden');
+                    
+                    // Show selected method instructions
+                    if (this.value === 'paystack') {
+                        paystackInstructions.classList.remove('hidden');
+                        document.getElementById('processPayment').innerHTML = '<i class="fas fa-lock mr-2"></i> Pay Now with Paystack';
+                    } else if (this.value === 'directTransfer') {
+                        transferForm.classList.remove('hidden');
+                        document.getElementById('processPayment').innerHTML = '<i class="fas fa-university mr-2"></i> Continue with Bank Transfer';
+                    } else if (this.value === 'ussd') {
+                        ussdForm.classList.remove('hidden');
+                        document.getElementById('processPayment').innerHTML = '<i class="fas fa-mobile-alt mr-2"></i> Continue with USSD';
+                    }
+                });
+            });
+            
+            // Generate reference numbers
+            const referenceNumber = document.getElementById('referenceNumber');
+            const ussdReference = document.getElementById('ussdReference');
+            const registrationData = JSON.parse(localStorage.getItem('registrationData') || '{}');
+            
+            if (referenceNumber && ussdReference) {
+                const ref = registrationData.reference || 'GIT-' + Date.now() + '-' + Math.floor(Math.random() * 1000);
+                referenceNumber.textContent = ref.replace('GIT-', '');
+                ussdReference.textContent = ref.replace('GIT-', '');
+            }
+        });
+    </script>
+</body>
+</html>

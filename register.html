@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - Global Idara Tech Bootcamp</title>
+    <meta name="description" content="Register for Global Idara Tech Bootcamp. Join West Africa's premier coding bootcamp and launch your tech career.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+        <!-- Production Tailwind CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    
+    <!-- Paystack -->
+    <script src="https://js.paystack.co/v1/inline.js"></script>
+    <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💻</text></svg>">
+</head>
+<body class="font-poppins bg-gradient-to-br from-emerald-50 via-white to-cyan-50 min-h-screen">
+    <!-- Glass morphism background elements -->
+    <div class="glass-bg-1"></div>
+    <div class="glass-bg-2"></div>
+    <div class="glass-bg-3"></div>
+    
+    <!-- Navigation -->
+    <nav class="sticky top-0 z-50 backdrop-blur-lg bg-white/70 border-b border-emerald-100">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center space-x-2">
+                    <a href="index.html" class="flex items-center space-x-2">
+                        <div class="w-10 h-10 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-400 flex items-center justify-center">
+                            <span class="text-white font-bold text-xl">GIT</span>
+                        </div>
+                        <div>
+                            <h1 class="text-2xl font-bold bg-gradient-to-r from-emerald-700 to-teal-600 bg-clip-text text-transparent">Global Idara Tech</h1>
+                            <p class="text-xs text-emerald-600 font-medium">Bootcamp</p>
+                        </div>
+                    </a>
+                </div>
+                
+                <a href="index.html" class="text-emerald-700 font-medium hover:text-emerald-600 transition-colors">
+                    <i class="fas fa-arrow-left mr-2"></i> Back to Home
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Registration Form -->
+    <section class="py-12 md:py-16">
+        <div class="container mx-auto px-6">
+            <div class="max-w-2xl mx-auto">
+                <!-- Progress Bar -->
+                <div class="mb-12">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="text-center">
+                            <div class="w-12 h-12 rounded-full bg-gradient-to-r from-emerald-600 to-teal-500 text-white font-bold flex items-center justify-center mx-auto mb-2">
+                                1
+                            </div>
+                            <p class="text-sm font-medium text-emerald-700">Personal Info</p>
+                        </div>
+                        <div class="h-1 flex-1 mx-4 bg-gradient-to-r from-emerald-500 to-teal-300"></div>
+                        <div class="text-center">
+                            <div class="w-12 h-12 rounded-full bg-emerald-100 text-emerald-700 font-bold flex items-center justify-center mx-auto mb-2">
+                                2
+                            </div>
+                            <p class="text-sm font-medium text-gray-500">Payment</p>
+                        </div>
+                        <div class="h-1 flex-1 mx-4 bg-gray-200"></div>
+                        <div class="text-center">
+                            <div class="w-12 h-12 rounded-full bg-emerald-100 text-emerald-700 font-bold flex items-center justify-center mx-auto mb-2">
+                                3
+                            </div>
+                            <p class="text-sm font-medium text-gray-500">Confirmation</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Form Header -->
+                <div class="text-center mb-10">
+                    <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Register for Bootcamp</h1>
+                    <p class="text-xl text-gray-600">Complete the form below to secure your spot in our next cohort</p>
+                </div>
+                
+                <!-- Registration Form -->
+                <div class="glass-card p-8 md:p-10 rounded-2xl shadow-lg">
+                    <form id="registrationForm">
+                        <!-- Name Fields -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                            <div>
+                                <label for="firstName" class="block text-gray-700 font-medium mb-2">
+                                    First Name <span class="text-red-500">*</span>
+                                </label>
+                                <div class="relative">
+                                    <input type="text" id="firstName" name="firstName" required 
+                                           class="w-full px-4 py-3 rounded-xl border border-emerald-200 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 focus:outline-none transition-all"
+                                           placeholder="Enter your first name">
+                                    <div class="absolute right-3 top-3 text-emerald-500">
+                                        <i class="fas fa-user"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <label for="lastName" class="block text-gray-700 font-medium mb-2">
+                                    Last Name <span class="text-red-500">*</span>
+                                </label>
+                                <div class="relative">
+                                    <input type="text" id="lastName" name="lastName" required 
+                                           class="w-full px-4 py-3 rounded-xl border border-emerald-200 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 focus:outline-none transition-all"
+                                           placeholder="Enter your last name">
+                                    <div class="absolute right-3 top-3 text-emerald-500">
+                                        <i class="fas fa-user"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Email -->
+                        <div class="mb-6">
+                            <label for="email" class="block text-gray-700 font-medium mb-2">
+                                Email Address <span class="text-red-500">*</span>
+                            </label>
+                            <div class="relative">
+                                <input type="email" id="email" name="email" required 
+                                       class="w-full px-4 py-3 rounded-xl border border-emerald-200 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 focus:outline-none transition-all"
+                                       placeholder="Enter your email address">
+                                <div class="absolute right-3 top-3 text-emerald-500">
+                                    <i class="fas fa-envelope"></i>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Gender -->
+                        <div class="mb-6">
+                            <label for="gender" class="block text-gray-700 font-medium mb-2">
+                                Gender <span class="text-red-500">*</span>
+                            </label>
+                            <div class="relative">
+                                <select id="gender" name="gender" required 
+                                        class="w-full px-4 py-3 rounded-xl border border-emerald-200 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 focus:outline-none transition-all appearance-none">
+                                    <option value="" disabled selected>Select your gender</option>
+                                    <option value="male">Male</option>
+                                    <option value="female">Female</option>
+                                    <option value="other">Other</option>
+                                    <option value="prefer-not-to-say">Prefer not to say</option>
+                                </select>
+                                <div class="absolute right-3 top-3 text-emerald-500 pointer-events-none">
+                                    <i class="fas fa-chevron-down"></i>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Country -->
+                        <div class="mb-6">
+                            <label for="country" class="block text-gray-700 font-medium mb-2">
+                                Country <span class="text-red-500">*</span>
+                            </label>
+                            <div class="relative">
+                                <select id="country" name="country" required 
+                                        class="w-full px-4 py-3 rounded-xl border border-emerald-200 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 focus:outline-none transition-all appearance-none">
+                                    <option value="" disabled selected>Select your country</option>
+                                    <optgroup label="West African Countries">
+                                        <option value="nigeria">Nigeria</option>
+                                        <option value="ghana">Ghana</option>
+                                        <option value="senegal">Senegal</option>
+                                        <option value="cote-divoire">Côte d'Ivoire</option>
+                                        <option value="benin">Benin</option>
+                                        <option value="togo">Togo</option>
+                                        <option value="liberia">Liberia</option>
+                                        <option value="sierra-leone">Sierra Leone</option>
+                                        <option value="gambia">Gambia</option>
+                                        <option value="guinea">Guinea</option>
+                                        <option value="guinea-bissau">Guinea-Bissau</option>
+                                        <option value="mali">Mali</option>
+                                        <option value="niger">Niger</option>
+                                        <option value="burkina-faso">Burkina Faso</option>
+                                    </optgroup>
+                                    <optgroup label="Other Countries">
+                                        <option value="other">Other (Please specify below)</option>
+                                    </optgroup>
+                                </select>
+                                <div class="absolute right-3 top-3 text-emerald-500 pointer-events-none">
+                                    <i class="fas fa-globe"></i>
+                                </div>
+                            </div>
+                            
+                            <div id="otherCountryContainer" class="hidden mt-4">
+                                <label for="otherCountry" class="block text-gray-700 font-medium mb-2">
+                                    Specify Your Country
+                                </label>
+                                <input type="text" id="otherCountry" name="otherCountry" 
+                                       class="w-full px-4 py-3 rounded-xl border border-emerald-200 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 focus:outline-none transition-all"
+                                       placeholder="Enter your country">
+                            </div>
+                        </div>
+                        
+                        <!-- Phone Number -->
+                        <div class="mb-8">
+                            <label for="phone" class="block text-gray-700 font-medium mb-2">
+                                Phone Number <span class="text-red-500">*</span>
+                            </label>
+                            <div class="flex flex-col md:flex-row gap-4">
+                                <!-- Country Code Dropdown -->
+                                <div class="md:w-1/3">
+                                    <div class="relative">
+                                        <select id="countryCode" name="countryCode" required 
+                                                class="w-full px-4 py-3 rounded-xl border border-emerald-200 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 focus:outline-none transition-all appearance-none">
+                                            <option value="" disabled selected>Code</option>
+                                            <option value="+234">+234 (Nigeria)</option>
+                                            <option value="+233">+233 (Ghana)</option>
+                                            <option value="+221">+221 (Senegal)</option>
+                                            <option value="+225">+225 (Côte d'Ivoire)</option>
+                                            <option value="+229">+229 (Benin)</option>
+                                            <option value="+228">+228 (Togo)</option>
+                                            <option value="+231">+231 (Liberia)</option>
+                                            <option value="+232">+232 (Sierra Leone)</option>
+                                            <option value="+220">+220 (Gambia)</option>
+                                            <option value="+224">+224 (Guinea)</option>
+                                            <option value="+1">+1 (USA/Canada)</option>
+                                            <option value="+44">+44 (UK)</option>
+                                            <option value="+33">+33 (France)</option>
+                                            <option value="+49">+49 (Germany)</option>
+                                            <option value="+234">+234 (Other)</option>
+                                        </select>
+                                        <div class="absolute right-3 top-3 text-emerald-500 pointer-events-none">
+                                            <i class="fas fa-flag"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Phone Number Input -->
+                                <div class="md:w-2/3">
+                                    <div class="relative">
+                                        <input type="tel" id="phone" name="phone" required 
+                                               class="w-full px-4 py-3 rounded-xl border border-emerald-200 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 focus:outline-none transition-all"
+                                               placeholder="Enter your phone number">
+                                        <div class="absolute right-3 top-3 text-emerald-500">
+                                            <i class="fas fa-phone"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Terms -->
+                        <div class="mb-8">
+                            <div class="flex items-start">
+                                <input type="checkbox" id="terms" name="terms" required 
+                                       class="mt-1 mr-3 rounded border-emerald-300 text-emerald-600 focus:ring-emerald-200">
+                                <label for="terms" class="text-gray-700">
+                                    I agree to the <a href="#" class="text-emerald-600 font-medium hover:underline">Terms and Conditions</a> and <a href="#" class="text-emerald-600 font-medium hover:underline">Privacy Policy</a>. I understand that my information will be used for enrollment purposes.
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <!-- Submit Button -->
+                        <button type="submit" id="submitBtn" 
+                                class="w-full py-4 bg-gradient-to-r from-emerald-600 to-teal-500 text-white font-semibold rounded-xl hover:shadow-xl hover:shadow-emerald-200 transition-all duration-300 transform hover:-translate-y-0.5">
+                            Continue to Payment <i class="ml-2 fas fa-arrow-right"></i>
+                        </button>
+                    </form>
+                </div>
+                
+                <!-- Footer Note -->
+                <div class="text-center mt-8 text-gray-600">
+                    <p>Have questions? <a href="https://wa.me/2341234567890" target="_blank" class="text-emerald-600 font-medium hover:underline">
+                        <i class="fab fa-whatsapp mr-1"></i> Chat with us on WhatsApp
+                    </a></p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Payment Modal -->
+    <div id="paymentModal" class="hidden fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-6">
+        <div class="glass-card max-w-md w-full p-8 rounded-2xl animate-modalIn">
+            <div class="text-center mb-8">
+                <div class="w-20 h-20 rounded-full bg-gradient-to-r from-emerald-100 to-teal-100 flex items-center justify-center mx-auto mb-6">
+                    <i class="fas fa-gem text-3xl text-emerald-600"></i>
+                </div>
+                <h3 class="text-2xl font-bold text-gray-900 mb-2">Ready to Secure Your Spot?</h3>
+                <p class="text-gray-600">You're about to join the Global Idara Tech Bootcamp with early bird pricing!</p>
+            </div>
+            
+            <div class="mb-8 p-6 bg-emerald-50 rounded-xl border border-emerald-200">
+                <div class="flex justify-between items-center mb-4">
+                    <span class="text-gray-700 font-medium">Early Bird Offer</span>
+                    <span class="text-xl font-bold text-emerald-700">₦12,000</span>
+                </div>
+                <div class="flex justify-between items-center text-sm text-gray-600">
+                    <span>Regular Price</span>
+                    <span class="line-through">₦30,000</span>
+                </div>
+            </div>
+            
+            <div class="space-y-4">
+                <button id="confirmPayment" 
+                        class="w-full py-4 bg-gradient-to-r from-emerald-600 to-teal-500 text-white font-semibold rounded-xl hover:shadow-xl hover:shadow-emerald-200 transition-all duration-300">
+                    <i class="fas fa-lock mr-2"></i> Yes, Proceed to Payment
+                </button>
+                
+                <button id="cancelPayment" 
+                        class="w-full py-4 bg-white border-2 border-emerald-200 text-emerald-700 font-semibold rounded-xl hover:bg-emerald-50 transition-all duration-300">
+                    <i class="fab fa-whatsapp mr-2"></i> No, Contact via WhatsApp
+                </button>
+                
+                <p class="text-center text-sm text-gray-500 mt-4">
+                    You'll be redirected to a secure payment gateway
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gradient-to-r from-emerald-900 to-teal-800 text-white py-12 mt-12">
+        <div class="container mx-auto px-6">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-8 md:mb-0">
+                    <div class="flex items-center space-x-2 mb-4">
+                        <div class="w-10 h-10 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-400 flex items-center justify-center">
+                            <span class="text-white font-bold text-xl">GIT</span>
+                        </div>
+                        <div>
+                            <h1 class="text-2xl font-bold">Global Idara Tech</h1>
+                            <p class="text-emerald-200 text-sm">Bootcamp</p>
+                        </div>
+                    </div>
+                    <p class="text-emerald-100">Launch your tech career in 12 weeks</p>
+                </div>
+                
+                <div class="text-center">
+                    <p class="mb-4 text-emerald-100">Need help with registration?</p>
+                    <a href="https://wa.me/2341234567890" target="_blank" 
+                       class="px-6 py-3 bg-white text-emerald-700 font-semibold rounded-xl hover:bg-emerald-50 transition-colors inline-flex items-center">
+                        <i class="fab fa-whatsapp mr-2 text-lg"></i> WhatsApp Support
+                    </a>
+                </div>
+            </div>
+            
+            <div class="border-t border-emerald-700 mt-12 pt-8 text-center text-emerald-200">
+                <p>© 2023 Global Idara Tech Bootcamp. All rights reserved.</p>
+                <p class="mt-2 text-sm">Contact: info@globalidaratech.com | +234 123 456 7890</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/script.js"></script>
+</body>
+</html>
