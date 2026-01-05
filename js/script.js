@@ -4,7 +4,7 @@
 const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwqXao9FyGTzGYJQd20iIRHcMo08BII-5y6ZAQG350SPiRdhIEILiMPJjPPZ5SWP1LM/exec';
 
 // Paystack configuration
-const PAYSTACK_PUBLIC_KEY = 'pk_test_bc2c499cbb16356b7e39778245f9cf76c0eb4c64';
+const PAYSTACK_PUBLIC_KEY = 'pk_live_be8439492e2cb71887ecc75ac7d76d405c8e2e98';
 
 // Initialize when DOM is loaded
 document.addEventListener('DOMContentLoaded', function() {
