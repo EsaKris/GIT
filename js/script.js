@@ -301,8 +301,8 @@ function initializePaystackPayment() {
         return false;
     }
     
-    // Amount in kobo (₦12,000 = 1200000 kobo)
-    const amountInKobo = 1200000;
+    // Amount in kobo (₦30,000 = 3000000 kobo)
+    const amountInKobo = 3000000;
     
     try {
         const handler = PaystackPop.setup({
